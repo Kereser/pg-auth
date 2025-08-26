@@ -17,6 +17,13 @@ tasks.register('explodedJar', Copy) {
     into layout.buildDirectory.dir("exploded")
 }
 
+tasks.withType(Checkstyle) {
+    dependsOn spotlessApply
+}
+tasks.named('check') {
+    dependsOn spotlessApply
+}
+
 jar {
     // To disable the *-plain.jar
     enabled = false
