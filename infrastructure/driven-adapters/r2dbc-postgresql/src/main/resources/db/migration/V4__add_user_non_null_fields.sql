@@ -1,0 +1,9 @@
+ALTER TABLE users
+    ALTER COLUMN email SET NOT NULL,
+    ALTER COLUMN first_name SET NOT NULL,
+    ALTER COLUMN last_name SET NOT NULL,
+    ALTER COLUMN last_name SET NOT NULL,
+    ALTER COLUMN base_salary SET NOT NULL,
+    ALTER COLUMN birth_date SET NOT NULL,
+    ALTER COLUMN id_type SET NOT NULL,
+    ALTER COLUMN id_number SET NOT NULL;
