@@ -26,6 +26,6 @@ public class User {
   private UserSalary baseSalary;
   private PhoneNumber phoneNumber;
 
-  private IdentificationType idType;
+  private IdType idType;
   private IdNumber idNumber;
 }

@@ -1,6 +1,6 @@
 package co.com.crediya.auth.model.user.vo;
 
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
 
 public record PhoneNumber(String value) {
   private static final String FIELD = "phoneNumber";
@@ -11,7 +11,7 @@ public record PhoneNumber(String value) {
   public PhoneNumber {
     if (value != null
         && (value.trim().length() > MAX_LENGTH || value.trim().length() < MIN_LENGTH)) {
-      throw new FieldNotValidException(
+      throw new IllegalValueForArgumentException(
           FIELD, String.format(LENGTH_EXCEPTION, MIN_LENGTH, MAX_LENGTH));
     }
   }

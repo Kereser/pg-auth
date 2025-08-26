@@ -1,7 +1,8 @@
 package co.com.crediya.auth.model.user.vo;
 
 import co.com.crediya.auth.model.user.exceptions.ExceptionConsFile;
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
+import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
 
 public record UserEmail(String value) {
   private static final String ENTITY = "email";
@@ -10,11 +11,11 @@ public record UserEmail(String value) {
 
   public UserEmail {
     if (value == null || value.isEmpty()) {
-      throw new FieldNotValidException(ENTITY, ExceptionConsFile.NOT_EMPY);
+      throw new MissingValueOnRequiredFieldException(ENTITY, ExceptionConsFile.NOT_EMPY);
     }
 
     if (value.trim().length() > MAX_LENGTH) {
-      throw new FieldNotValidException(ENTITY, String.format(MAX_LENGTH_MSG, MAX_LENGTH));
+      throw new IllegalValueForArgumentException(ENTITY, String.format(MAX_LENGTH_MSG, MAX_LENGTH));
     }
   }
 }

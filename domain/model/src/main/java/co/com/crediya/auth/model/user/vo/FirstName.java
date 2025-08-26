@@ -1,6 +1,7 @@
 package co.com.crediya.auth.model.user.vo;
 
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
+import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
 
 public record FirstName(String value) {
   private static final String FIELD = "firstName";
@@ -11,11 +12,13 @@ public record FirstName(String value) {
 
   public FirstName {
     if (value == null || value.isBlank()) {
-      throw new FieldNotValidException(FIELD, String.format(MINIMUM_LENGTH_EXCEPTION, MIN_LENGTH));
+      throw new MissingValueOnRequiredFieldException(
+          FIELD, String.format(MINIMUM_LENGTH_EXCEPTION, MIN_LENGTH));
     }
 
     if (value.trim().length() > MAX_LENGTH) {
-      throw new FieldNotValidException(FIELD, String.format(MAX_LENGTH_EXCEPTION, MAX_LENGTH));
+      throw new IllegalValueForArgumentException(
+          FIELD, String.format(MAX_LENGTH_EXCEPTION, MAX_LENGTH));
     }
   }
 }

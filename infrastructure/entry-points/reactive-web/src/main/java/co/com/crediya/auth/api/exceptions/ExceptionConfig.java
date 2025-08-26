@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
-import co.com.crediya.auth.model.user.exceptions.DuplicatedInfoException;
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
-import co.com.crediya.auth.model.user.exceptions.IllegalFieldArgument;
-import co.com.crediya.auth.model.user.exceptions.MissingRequiredParam;
+import co.com.crediya.auth.model.user.exceptions.*;
 
 @Configuration
 public class ExceptionConfig {
@@ -19,9 +16,9 @@ public class ExceptionConfig {
   public Map<Class<? extends Exception>, HttpStatus> exceptionToStatusCode() {
     return Map.of(
         MissingRequiredParam.class, HttpStatus.BAD_REQUEST,
-        FieldNotValidException.class, HttpStatus.BAD_REQUEST,
+        MissingValueOnRequiredFieldException.class, HttpStatus.BAD_REQUEST,
         DuplicatedInfoException.class, HttpStatus.CONFLICT,
-        IllegalFieldArgument.class, HttpStatus.BAD_REQUEST);
+        IllegalValueForArgumentException.class, HttpStatus.BAD_REQUEST);
   }
 
   @Bean
