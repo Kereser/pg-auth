@@ -1,6 +1,7 @@
 package co.com.crediya.auth.model.user.vo;
 
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
+import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
 
 public record Address(String value) {
   private static final String FIELD = "address";
@@ -12,11 +13,11 @@ public record Address(String value) {
   public Address {
     if (value != null) {
       if (value.isBlank()) {
-        throw new FieldNotValidException(FIELD, MUST_HAVE_VALUE);
+        throw new MissingValueOnRequiredFieldException(FIELD, MUST_HAVE_VALUE);
       }
 
       if (value.trim().length() > MAX_LENGTH || value.trim().length() < MIN_LENGTH) {
-        throw new FieldNotValidException(
+        throw new IllegalValueForArgumentException(
             FIELD, String.format(LENGTH_EXCEPTION, MIN_LENGTH, MAX_LENGTH));
       }
     }

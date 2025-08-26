@@ -2,7 +2,8 @@ package co.com.crediya.auth.model.user.vo;
 
 import java.time.LocalDate;
 
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
+import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
 
 public record BirthDate(LocalDate value) {
   private static final String FIELD = "birthDate";
@@ -11,7 +12,7 @@ public record BirthDate(LocalDate value) {
 
   public BirthDate {
     if (value == null) {
-      throw new FieldNotValidException(FIELD, NOT_EMPTY);
+      throw new MissingValueOnRequiredFieldException(FIELD, NOT_EMPTY);
     }
 
     LocalDate today = LocalDate.now();
@@ -19,7 +20,7 @@ public record BirthDate(LocalDate value) {
     LocalDate maxAllowed = today.minusYears(18);
 
     if (value.isBefore(minAllowed) || value.isAfter(maxAllowed)) {
-      throw new FieldNotValidException(FIELD, AGE_EXCEPTION);
+      throw new IllegalValueForArgumentException(FIELD, AGE_EXCEPTION);
     }
   }
 }
