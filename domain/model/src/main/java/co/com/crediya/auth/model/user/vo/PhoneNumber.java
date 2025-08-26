@@ -7,7 +7,6 @@ public record PhoneNumber(String value) {
   private static final int MAX_LENGTH = 13;
   private static final int MIN_LENGTH = 10;
   private static final String LENGTH_EXCEPTION = "Phone number must be between: %d and %d";
-  private static final String NOT_EMPTY = "Must not be empty";
 
   public PhoneNumber {
     if (value != null
