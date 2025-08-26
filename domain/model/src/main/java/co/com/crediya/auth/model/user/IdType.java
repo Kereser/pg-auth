@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import co.com.crediya.auth.model.user.exceptions.ExceptionConsFile;
-import co.com.crediya.auth.model.user.exceptions.FieldNotValidException;
-import co.com.crediya.auth.model.user.exceptions.IllegalFieldArgument;
+import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
+import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum IdentificationType {
+public enum IdType {
   CC("CC"),
   PASSPORT("PASSPORT");
 
@@ -19,24 +19,25 @@ public enum IdentificationType {
   private static final String ENTITY = "idType";
   private static final String NOT_VALID_VALUE = "%s is not a valid value for %s";
 
-  private static final Map<String, IdentificationType> BY_CODE = new HashMap<>();
+  private static final Map<String, IdType> BY_CODE = new HashMap<>();
 
   static {
-    for (IdentificationType e : values()) {
+    for (IdType e : values()) {
       BY_CODE.put(e.code, e);
     }
   }
 
-  public static IdentificationType fromCode(String code) {
+  public static IdType fromCode(String code) {
     if (code == null) {
-      throw new FieldNotValidException(ENTITY, ExceptionConsFile.NOT_EMPY);
+      throw new MissingValueOnRequiredFieldException(ENTITY, ExceptionConsFile.NOT_EMPY);
     }
 
     code = code.toUpperCase();
-    IdentificationType type = BY_CODE.get(code);
+    IdType type = BY_CODE.get(code);
 
     if (type == null) {
-      throw new IllegalFieldArgument(ENTITY, String.format(NOT_VALID_VALUE, code, ENTITY));
+      throw new IllegalValueForArgumentException(
+          ENTITY, String.format(NOT_VALID_VALUE, code, ENTITY));
     }
 
     return type;

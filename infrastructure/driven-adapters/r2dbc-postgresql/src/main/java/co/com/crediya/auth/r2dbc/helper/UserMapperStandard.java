@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.com.crediya.auth.model.user.IdentificationType;
+import co.com.crediya.auth.model.user.IdType;
 import co.com.crediya.auth.model.user.User;
 import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
@@ -67,8 +67,8 @@ public interface UserMapperStandard extends UserMapper {
     return new PhoneNumber(phoneNumber);
   }
 
-  default IdentificationType toIdType(String idType) {
-    return IdentificationType.fromCode(idType);
+  default IdType toIdType(String idType) {
+    return IdType.fromCode(idType);
   }
 
   default IdNumber toIdNumber(String idNumber) {
