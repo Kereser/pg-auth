@@ -2,6 +2,7 @@ package co.com.crediya.auth.r2dbc;
 
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.reactive.TransactionalOperator;
 
@@ -14,6 +15,7 @@ import co.com.crediya.auth.r2dbc.helper.UserMapperStandard;
 import reactor.core.publisher.Mono;
 
 @Repository
+@Slf4j
 public class UserRepositoryAdapter
     extends ReactiveAdapterOperations<User, UserEntity, UUID, UserReactiveRepository>
     implements UserRepository {
