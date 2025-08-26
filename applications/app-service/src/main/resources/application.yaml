@@ -1,0 +1,41 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "auth-service"
+  devtools:
+    add-properties: false
+  h2:
+    console:
+      enabled: true
+      path: "/h2"
+  flyway:
+    url: jdbc:postgresql://${adapters.r2dbc.host}:${adapters.r2dbc.port}/${adapters.r2dbc.database}
+    user: ${adapters.r2dbc.username}
+    password: ${adapters.r2dbc.password}
+  profiles:
+    include: null
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus,mappings"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+routes:
+  paths:
+    base: "/api/v1"
+    users: "/users"
+
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5432
+    database: "auth"
+    username: "crediya"
+    password: "P@55w0rd"
