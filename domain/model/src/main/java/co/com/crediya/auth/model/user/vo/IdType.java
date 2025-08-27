@@ -1,4 +1,4 @@
-package co.com.crediya.auth.model.user;
+package co.com.crediya.auth.model.user.vo;
 
 import java.util.HashMap;
 import java.util.Map;

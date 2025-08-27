@@ -6,12 +6,12 @@ import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.com.crediya.auth.model.user.IdType;
 import co.com.crediya.auth.model.user.User;
 import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
 import co.com.crediya.auth.model.user.mapper.UserMapper;
 import co.com.crediya.auth.model.user.vo.*;
+import co.com.crediya.auth.model.user.vo.IdType;
 import co.com.crediya.auth.r2dbc.entity.UserEntity;
 
 @Mapper(componentModel = "spring")
