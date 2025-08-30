@@ -5,7 +5,7 @@ import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
 
 public interface UserMapper {
-  User toDomainCommand(CreateUserCommand command);
+  User toDomainFromCommand(CreateUserCommand command);
 
-  UserResponseDTO toDTO(User user);
+  UserResponseDTO toDTOResponse(User user);
 }

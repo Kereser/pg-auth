@@ -28,9 +28,12 @@ cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 
 routes:
+  variables:
+    idNumber: "idNumber"
   paths:
     base: "/api/v1"
     users: "/users"
+    userByIdNumber: "/users/{idNumber}"
 
 adapters:
   r2dbc:

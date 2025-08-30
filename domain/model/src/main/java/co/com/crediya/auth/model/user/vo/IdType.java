@@ -3,9 +3,7 @@ package co.com.crediya.auth.model.user.vo;
 import java.util.HashMap;
 import java.util.Map;
 
-import co.com.crediya.auth.model.user.exceptions.ExceptionConsFile;
-import co.com.crediya.auth.model.user.exceptions.IllegalValueForArgumentException;
-import co.com.crediya.auth.model.user.exceptions.MissingValueOnRequiredFieldException;
+import co.com.crediya.auth.model.user.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,8 +14,6 @@ public enum IdType {
   PASSPORT("PASSPORT");
 
   private final String code;
-  private static final String ENTITY = "idType";
-  private static final String NOT_VALID_VALUE = "%s is not a valid value for %s";
 
   private static final Map<String, IdType> BY_CODE = new HashMap<>();
 
@@ -29,7 +25,8 @@ public enum IdType {
 
   public static IdType fromCode(String code) {
     if (code == null) {
-      throw new MissingValueOnRequiredFieldException(ENTITY, ExceptionConsFile.NOT_EMPY);
+      throw new MissingValueOnRequiredFieldException(
+          Fields.ID_TYPE.getName(), PlainErrors.NOT_EMPY.getMsg());
     }
 
     code = code.toUpperCase();
@@ -37,7 +34,8 @@ public enum IdType {
 
     if (type == null) {
       throw new IllegalValueForArgumentException(
-          ENTITY, String.format(NOT_VALID_VALUE, code, ENTITY));
+          Fields.ID_TYPE.getName(),
+          TemplateErrors.X_NOT_VALID_FORMAT_FOR_Y.buildMsg(code, Fields.ID_TYPE.getName()));
     }
 
     return type;
