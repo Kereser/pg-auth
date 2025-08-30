@@ -15,10 +15,16 @@ public class ExceptionConfig {
   @Bean
   public Map<Class<? extends Exception>, HttpStatus> exceptionToStatusCode() {
     return Map.of(
-        MissingRequiredParam.class, HttpStatus.BAD_REQUEST,
-        MissingValueOnRequiredFieldException.class, HttpStatus.BAD_REQUEST,
-        DuplicatedInfoException.class, HttpStatus.CONFLICT,
-        IllegalValueForArgumentException.class, HttpStatus.BAD_REQUEST);
+        MissingRequiredParam.class,
+        HttpStatus.BAD_REQUEST,
+        MissingValueOnRequiredFieldException.class,
+        HttpStatus.BAD_REQUEST,
+        DuplicatedInfoException.class,
+        HttpStatus.CONFLICT,
+        IllegalValueForArgumentException.class,
+        HttpStatus.BAD_REQUEST,
+        EntityNotFoundException.class,
+        HttpStatus.NOT_FOUND);
   }
 
   @Bean
