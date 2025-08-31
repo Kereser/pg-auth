@@ -97,6 +97,6 @@ public class SecurityConfig {
   }
 
   private String loginPath() {
-    return buildFullPath(routes.getPaths().getUsers());
+    return buildFullPath(routes.getPaths().getLogin());
   }
 }
