@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "routes")
-public class UserRoutes {
+public class Routes {
 
   private Variables variables;
   private Paths paths;
@@ -24,6 +24,7 @@ public class UserRoutes {
   public static class Paths {
     private String base;
     private String users;
+    private String login;
     private String userByIdNumber;
   }
 }

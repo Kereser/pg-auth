@@ -18,12 +18,19 @@ public class CorsConfig {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.setAllowedOrigins(List.of(origins.split(",")));
-    config.setAllowedMethods(Arrays.asList("POST", "GET"));
+    config.setAllowedMethods(Arrays.asList(AllowedMethods.POST, AllowedMethods.GET));
     config.setAllowedHeaders(List.of(CorsConfiguration.ALL));
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
 
     return new CorsWebFilter(source);
+  }
+
+  static class AllowedMethods {
+    private AllowedMethods() {}
+
+    public static final String POST = "POST";
+    public static final String GET = "GET";
   }
 }
