@@ -14,7 +14,8 @@ public record IdNumber(String value) {
 
     if (value.trim().length() < MIN_VALUE || value.trim().length() > MAX_VALUE) {
       throw new IllegalValueForArgumentException(
-          Fields.ID_NUMBER.getName(), TemplateErrors.LENGTH_BOUNDARIES.buildMsg(MIN_VALUE, MAX_VALUE));
+          Fields.ID_NUMBER.getName(),
+          TemplateErrors.LENGTH_BOUNDARIES.buildMsg(MIN_VALUE, MAX_VALUE));
     }
   }
 }
