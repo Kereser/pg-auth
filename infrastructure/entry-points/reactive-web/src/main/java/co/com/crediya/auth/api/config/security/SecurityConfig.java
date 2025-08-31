@@ -16,17 +16,21 @@ import co.com.crediya.auth.api.config.security.implementations.UserDetailsServic
 import co.com.crediya.auth.api.config.security.utils.PasswordEncoderImp;
 import co.com.crediya.auth.model.RoleConstants;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
   private final UserDetailsServiceImp userDetailsServiceImp;
   private final JwtSecurityContextRepository securityContextRepository;
   private final Routes routes;
 
-  public static final String SWAGGER_PATHS = "/swagger-ui/**, /swagger-ui.html, /v3/api-docs/**";
+  public static final String SWAGGER_PATH = "/swagger-ui.html";
+  public static final String SWAGGER_PATH_1 = "/swagger-ui/**";
+  public static final String SWAGGER_PATH_2 = "/v3/api-docs/**";
   public static final String ACTUATOR_PATHS = "/actuator/**";
 
   @Bean
@@ -56,7 +60,11 @@ public class SecurityConfig {
     exchanges
         .pathMatchers(loginPath())
         .permitAll()
-        .pathMatchers(SWAGGER_PATHS)
+        .pathMatchers(SWAGGER_PATH)
+        .permitAll()
+        .pathMatchers(SWAGGER_PATH_1)
+        .permitAll()
+        .pathMatchers(SWAGGER_PATH_2)
         .permitAll()
         .pathMatchers(ACTUATOR_PATHS)
         .permitAll()
