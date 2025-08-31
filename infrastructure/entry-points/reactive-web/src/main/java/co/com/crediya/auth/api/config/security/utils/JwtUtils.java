@@ -42,8 +42,6 @@ public class JwtUtils {
 
     CustomUserDetails usrDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    log.info("Request userDetails: {}", usrDetails);
-
     List<String> roles =
         new ArrayList<>(
             usrDetails.getAuthorities().stream()
