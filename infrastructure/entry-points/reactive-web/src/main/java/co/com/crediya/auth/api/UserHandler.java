@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import co.com.crediya.auth.api.config.UserRoutes;
+import co.com.crediya.auth.api.config.Routes;
 import co.com.crediya.auth.api.dto.CreateUserDTORequest;
 import co.com.crediya.auth.api.helper.UserRestMapper;
 import co.com.crediya.auth.model.user.User;
@@ -23,12 +23,12 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class Handler {
+public class UserHandler {
   private final CreateUserUseCase createUserUseCase;
   private final FindByIdNumberUseCase findByIdNumberUseCase;
   private final RequestValidator reqValidator;
   private final UserRestMapper restMapper;
-  private final UserRoutes userRoutes;
+  private final Routes routes;
 
   @ReadOperation()
   public Mono<ServerResponse> listenCreateUserUseCase(ServerRequest req) {
@@ -59,10 +59,10 @@ public class Handler {
     String idNumberVariable;
 
     try {
-      idNumberVariable = req.pathVariable(userRoutes.getVariables().getIdNumber());
+      idNumberVariable = req.pathVariable(routes.getVariables().getIdNumber());
     } catch (IllegalArgumentException ex) {
       throw new MissingRequiredParam(
-          userRoutes.getVariables().getIdNumber(), "Required to find user by idNumber");
+          routes.getVariables().getIdNumber(), "Required to find user by idNumber");
     }
 
     return findByIdNumberUseCase
