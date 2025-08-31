@@ -1,4 +1,4 @@
-package co.com.crediya.auth.r2dbc;
+package co.com.crediya.auth.r2dbc.user;
 
 import java.util.UUID;
 
@@ -9,9 +9,9 @@ import co.com.crediya.auth.model.user.User;
 import co.com.crediya.auth.model.user.gateways.UserRepository;
 import co.com.crediya.auth.model.user.vo.IdNumber;
 import co.com.crediya.auth.model.user.vo.UserEmail;
-import co.com.crediya.auth.r2dbc.entity.UserEntity;
 import co.com.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
-import co.com.crediya.auth.r2dbc.helper.UserMapperStandard;
+import co.com.crediya.auth.r2dbc.user.entity.UserEntity;
+import co.com.crediya.auth.r2dbc.user.mapper.UserMapperStandard;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +26,7 @@ public class UserRepositoryAdapter
       UserReactiveRepository repository,
       UserMapperStandard mapper,
       TransactionalOperator txOperator) {
-    super(repository, mapper::toDomain, mapper::toEntity);
+    super(repository, mapper::toEntity, mapper::toData);
     this.txOperator = txOperator;
   }
 
@@ -69,5 +69,22 @@ public class UserRepositoryAdapter
         .doOnSuccess(res -> log.info("saved user: {}", res))
         .doOnError(
             err -> log.error("Could not save user: {}. Details: {}", entity, err.getMessage()));
+  }
+
+  @Override
+  public Mono<User> findByEmail(UserEmail email) {
+    return repository
+        .findByEmail(email.value())
+        .map(super::toEntity)
+        .as(txOperator::transactional)
+        .doOnSubscribe(sub -> log.info("Getting user with email: {}", email))
+        .doOnSuccess(
+            res -> log.info("Found userId: {} for given email: {}", res.getId(), res.getEmail()))
+        .doOnError(
+            err ->
+                log.error(
+                    "Error while retrieving user for email: {}. Details: {}",
+                    email,
+                    err.getMessage()));
   }
 }

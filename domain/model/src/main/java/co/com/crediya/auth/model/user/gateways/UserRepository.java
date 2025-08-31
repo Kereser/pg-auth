@@ -11,4 +11,6 @@ public interface UserRepository {
   Mono<User> save(User entity);
 
   Mono<User> findByIdNumber(IdNumber idNumber);
+
+  Mono<User> findByEmail(UserEmail email);
 }

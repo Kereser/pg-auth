@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum Fields {
   EMAIL("Email"),
+  PASSWORD("Password"),
   ID_NUMBER("Id number"),
   BIRTH_DATE("Birth date"),
   FIRST_NAME("First name"),

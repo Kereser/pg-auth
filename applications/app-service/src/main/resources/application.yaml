@@ -24,8 +24,13 @@ management:
     health:
       probes:
         enabled: true
+
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+jwt:
+  secret: Sikret00-2$$_32.,/>>/SfgdskjlXDSF<>????94534906--=_+)I-w=5243=0-59=4+_)I*(+
+  expiration: 86400000
 
 routes:
   variables:
@@ -33,6 +38,7 @@ routes:
   paths:
     base: "/api/v1"
     users: "/users"
+    login: "/auth/login"
     userByIdNumber: "/users/{idNumber}"
 
 adapters:

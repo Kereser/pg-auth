@@ -16,8 +16,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
 
 import co.com.crediya.auth.model.user.exceptions.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class ReactiveExceptionHandler extends AbstractErrorWebExceptionHandler {
   private final Map<Class<? extends Exception>, HttpStatus> exceptionToStatusCode;

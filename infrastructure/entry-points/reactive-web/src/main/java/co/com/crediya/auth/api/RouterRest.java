@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import co.com.crediya.auth.api.config.UserRoutes;
+import co.com.crediya.auth.api.config.Routes;
 import co.com.crediya.auth.api.exceptions.ErrorResponseDTO;
 import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
@@ -28,15 +28,14 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class RouterRest {
-  private final UserRoutes userRoutes;
-  private final Handler userHandler;
+  private final Routes routes;
 
   @Bean
   @RouterOperations({
     @RouterOperation(
         method = RequestMethod.GET,
         path = "/api/v1/users/{idNumber}",
-        beanClass = Handler.class,
+        beanClass = UserHandler.class,
         beanMethod = "listenFindUserByIdNumberUseCase",
         operation =
             @Operation(
@@ -84,7 +83,7 @@ public class RouterRest {
     @RouterOperation(
         method = RequestMethod.POST,
         path = "/api/v1/users",
-        beanClass = Handler.class,
+        beanClass = UserHandler.class,
         beanMethod = "listenCreateUserUseCase",
         operation =
             @Operation(
@@ -131,16 +130,18 @@ public class RouterRest {
                               schema = @Schema(implementation = ErrorResponse.class)))
                 }))
   })
-  public RouterFunction<ServerResponse> routerFunction() {
+  public RouterFunction<ServerResponse> routerFunction(
+      UserHandler userHandler, AuthHandler authHandler) {
     return route()
         .path(
-            userRoutes.getPaths().getBase(),
+            routes.getPaths().getBase(),
             builder ->
                 builder
-                    .POST(userRoutes.getPaths().getUsers(), userHandler::listenCreateUserUseCase)
+                    .POST(routes.getPaths().getUsers(), userHandler::listenCreateUserUseCase)
                     .GET(
-                        userRoutes.getPaths().getUserByIdNumber(),
-                        userHandler::listenFindUserByIdNumberUseCase))
+                        routes.getPaths().getUserByIdNumber(),
+                        userHandler::listenFindUserByIdNumberUseCase)
+                    .POST(routes.getPaths().getLogin(), authHandler::listenLoging))
         .build();
   }
 }

@@ -1,19 +1,21 @@
-package co.com.crediya.auth.r2dbc.helper;
+package co.com.crediya.auth.r2dbc.user.mapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import co.com.crediya.auth.model.role.Role;
 import co.com.crediya.auth.model.user.User;
 import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
 import co.com.crediya.auth.model.user.mapper.UserMapper;
 import co.com.crediya.auth.model.user.vo.*;
 import co.com.crediya.auth.model.user.vo.IdType;
-import co.com.crediya.auth.r2dbc.entity.UserEntity;
+import co.com.crediya.auth.r2dbc.user.entity.UserEntity;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapperStandard extends UserMapper {
@@ -25,12 +27,15 @@ public interface UserMapperStandard extends UserMapper {
   @Mapping(target = "birthDate", source = "birthDate.value")
   @Mapping(target = "phoneNumber", source = "phoneNumber.value")
   @Mapping(target = "address", source = "address.value")
-  UserEntity toEntity(User domain);
+  @Mapping(target = "roleId", source = "role.id")
+  UserEntity toData(User domain);
 
-  User toDomain(UserEntity entity);
+  @Mapping(target = "role", expression = "java(toUserRole(entity.roleId()))")
+  User toEntity(UserEntity entity);
 
   @Override
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "role", ignore = true)
   User toDomainFromCommand(CreateUserCommand command);
 
   @Override
@@ -39,6 +44,10 @@ public interface UserMapperStandard extends UserMapper {
   @Mapping(target = "idNumber", source = "idNumber.value")
   @Mapping(target = "idType", source = "idType.code")
   UserResponseDTO toDTOResponse(User user);
+
+  default Role toUserRole(UUID id) {
+    return new Role().toBuilder().id(id).build();
+  }
 
   default UserEmail toUserEmail(String email) {
     return new UserEmail(email);

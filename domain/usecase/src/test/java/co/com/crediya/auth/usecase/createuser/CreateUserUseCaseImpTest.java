@@ -1,19 +1,25 @@
 package co.com.crediya.auth.usecase.createuser;
 
+import static co.com.crediya.auth.usecase.DataUtils.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import co.com.crediya.auth.model.helper.PasswordEncoder;
+import co.com.crediya.auth.model.role.Role;
+import co.com.crediya.auth.model.role.RoleName;
+import co.com.crediya.auth.model.role.gateways.RoleRepository;
 import co.com.crediya.auth.model.user.User;
 import co.com.crediya.auth.model.user.dto.CreateUserCommand;
 import co.com.crediya.auth.model.user.dto.UserResponseDTO;
@@ -34,42 +40,52 @@ class CreateUserUseCaseImpTest {
   }
 
   @Mock private UserRepository userRepository;
-
+  @Mock private RoleRepository roleRepository;
+  @Mock private PasswordEncoder passwordEncoder;
   @Mock private UserMapper userMapper;
-
   @InjectMocks private CreateUserUseCaseImp createUserUseCase;
+
+  @Captor private ArgumentCaptor<User> userArgumentCaptor;
 
   private CreateUserCommand command;
   private User userDomain;
   private UserResponseDTO responseDTO;
+  private Role clientRole;
 
   @BeforeEach
   void setUp() {
     command =
         new CreateUserCommand(
-            "test@test.com",
-            "John",
-            "Doe",
-            LocalDate.now(),
-            "123 Street",
-            "555-1234",
-            BigDecimal.TEN,
-            "CC",
-            "12345");
+            randomEmail(),
+            randomPassword(10),
+            randomName(),
+            randomName(),
+            now().plusYears(20),
+            randomAddress(),
+            randomPhone(),
+            randomBigDecimal(),
+            randomIdType(),
+            randomIdNumber());
+
     userDomain =
         User.builder()
             .id(UUID.randomUUID())
-            .email(new UserEmail("test@test.com"))
-            .firstName(new FirstName("John"))
-            .idNumber(new IdNumber("12345"))
+            .email(new UserEmail(randomEmail()))
+            .password(randomPassword(10))
+            .firstName(new FirstName(randomName()))
+            .idNumber(new IdNumber(randomIdNumber()))
+            .role(clientRole)
             .build();
+
     responseDTO =
         new UserResponseDTO(
             userDomain.getId(),
             userDomain.getEmail().value(),
             userDomain.getFirstName().value(),
-            "CC",
-            "12345");
+            randomIdType(),
+            randomIdNumber());
+
+    clientRole = new Role(UUID.randomUUID(), RoleName.CLIENT, randomEmail());
   }
 
   @Test
@@ -78,15 +94,24 @@ class CreateUserUseCaseImpTest {
 
     when(userRepository.existsByEmail(userDomain.getEmail())).thenReturn(Mono.just(false));
     when(userRepository.findByIdNumber(userDomain.getIdNumber())).thenReturn(Mono.empty());
+    String mockedPass = randomPassword(30);
+    when(passwordEncoder.encode(userDomain.getPassword())).thenReturn(mockedPass);
+    when(roleRepository.findClientRole()).thenReturn(Mono.just(clientRole));
 
-    when(userRepository.save(userDomain)).thenReturn(Mono.just(userDomain));
-    when(userMapper.toDTOResponse(userDomain)).thenReturn(responseDTO);
+    when(userRepository.save(any(User.class)))
+        .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+    when(userMapper.toDTOResponse(any(User.class))).thenReturn(responseDTO);
 
     Mono<UserResponseDTO> resultMono = createUserUseCase.execute(command);
 
     StepVerifier.create(resultMono).expectNext(responseDTO).verifyComplete();
 
-    verify(userRepository).save(userDomain);
+    verify(userRepository).save(userArgumentCaptor.capture());
+    User userSentToSave = userArgumentCaptor.getValue();
+
+    assertThat(userSentToSave.getPassword()).isEqualTo(mockedPass);
+    assertThat(userSentToSave.getRole()).isEqualTo(clientRole);
+    assertThat(userSentToSave.getEmail()).isEqualTo(userDomain.getEmail());
   }
 
   @Test

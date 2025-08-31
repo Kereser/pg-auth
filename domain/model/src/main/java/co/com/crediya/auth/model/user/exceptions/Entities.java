@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public enum Entities {
   USER,
+  ROLE
 }

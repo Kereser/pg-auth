@@ -24,7 +24,9 @@ public class ExceptionConfig {
         IllegalValueForArgumentException.class,
         HttpStatus.BAD_REQUEST,
         EntityNotFoundException.class,
-        HttpStatus.NOT_FOUND);
+        HttpStatus.NOT_FOUND,
+        MissingRequiredBodyException.class,
+        HttpStatus.BAD_REQUEST);
   }
 
   @Bean

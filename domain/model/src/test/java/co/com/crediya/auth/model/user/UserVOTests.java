@@ -258,8 +258,7 @@ class UserVOTests {
     @Test
     void shouldThrowExceptionWhenSalaryIsNegative() {
       BigDecimal negativeSalary = new BigDecimal("-100");
-      assertThrows(
-          IllegalValueForArgumentException.class, () -> new UserSalary(negativeSalary));
+      assertThrows(IllegalValueForArgumentException.class, () -> new UserSalary(negativeSalary));
     }
 
     @Test
