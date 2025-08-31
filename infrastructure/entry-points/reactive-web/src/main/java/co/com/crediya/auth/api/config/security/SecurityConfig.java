@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import co.com.crediya.auth.api.config.Routes;
+import co.com.crediya.auth.api.config.security.implementations.JwtSecurityContextRepository;
+import co.com.crediya.auth.api.config.security.implementations.UserDetailsServiceImp;
+import co.com.crediya.auth.api.config.security.utils.PasswordEncoderImp;
 import co.com.crediya.auth.model.RoleConstants;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -22,11 +25,9 @@ public class SecurityConfig {
   private final UserDetailsServiceImp userDetailsServiceImp;
   private final JwtSecurityContextRepository securityContextRepository;
   private final Routes routes;
-  public static final String SWAGGER_URL = "/swagger-ui/**";
-  public static final String SWAGGER_HTML = "/swagger-ui.html";
-  public static final String SWAGGER_DOCS_URL = "/v3/api-docs/**";
-  public static final String ACTUATOR_URL = "/actuator/**";
-  private static final String BASE_API_PATH = "/api/v1";
+
+  public static final String SWAGGER_PATHS = "/swagger-ui/**, /swagger-ui.html, /v3/api-docs/**";
+  public static final String ACTUATOR_PATHS = "/actuator/**";
 
   @Bean
   public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -35,31 +36,34 @@ public class SecurityConfig {
         .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
         .authenticationManager(authManager())
         .securityContextRepository(securityContextRepository)
-        .exceptionHandling(
-            exceptionHandling ->
-                exceptionHandling
-                    .authenticationEntryPoint(
-                        (swe, e) ->
-                            Mono.fromRunnable(
-                                () -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)))
-                    .accessDeniedHandler(
-                        (swe, e) ->
-                            Mono.fromRunnable(
-                                () -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN))))
-        .authorizeExchange(
-            exchanges ->
-                exchanges
-                    .pathMatchers(routes.getPaths().getBase() + routes.getPaths().getLogin())
-                    .permitAll()
-                    .pathMatchers(HttpMethod.GET, SWAGGER_HTML, SWAGGER_URL, SWAGGER_DOCS_URL)
-                    .permitAll()
-                    .pathMatchers(ACTUATOR_URL)
-                    .permitAll()
-                    .pathMatchers(HttpMethod.POST, BASE_API_PATH + routes.getPaths().getUsers())
-                    .hasAnyAuthority(RoleConstants.MANAGER, RoleConstants.ADMIN)
-                    .anyExchange()
-                    .authenticated())
+        .exceptionHandling(this::configureExceptionHandling)
+        .authorizeExchange(this::configureAuthorization)
         .build();
+  }
+
+  private void configureExceptionHandling(
+      ServerHttpSecurity.ExceptionHandlingSpec exceptionHandling) {
+    exceptionHandling
+        .authenticationEntryPoint(
+            (swe, e) ->
+                Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)))
+        .accessDeniedHandler(
+            (swe, e) ->
+                Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN)));
+  }
+
+  private void configureAuthorization(ServerHttpSecurity.AuthorizeExchangeSpec exchanges) {
+    exchanges
+        .pathMatchers(loginPath())
+        .permitAll()
+        .pathMatchers(SWAGGER_PATHS)
+        .permitAll()
+        .pathMatchers(ACTUATOR_PATHS)
+        .permitAll()
+        .pathMatchers(HttpMethod.POST, usersPath())
+        .hasAnyAuthority(RoleConstants.MANAGER, RoleConstants.ADMIN)
+        .anyExchange()
+        .authenticated();
   }
 
   @Bean
@@ -74,5 +78,17 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new PasswordEncoderImp().getEncoder();
+  }
+
+  private String buildFullPath(String path) {
+    return String.format("%s%s", routes.getPaths().getBase(), path);
+  }
+
+  private String usersPath() {
+    return buildFullPath(routes.getPaths().getUsers());
+  }
+
+  private String loginPath() {
+    return buildFullPath(routes.getPaths().getUsers());
   }
 }
