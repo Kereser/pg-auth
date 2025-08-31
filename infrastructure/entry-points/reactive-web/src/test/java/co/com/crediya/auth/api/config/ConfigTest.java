@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import co.com.crediya.auth.api.Handler;
 import co.com.crediya.auth.api.RouterRest;
+import co.com.crediya.auth.api.UserHandler;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 @WebFluxTest
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 @Disabled
