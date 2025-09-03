@@ -1,10 +1,11 @@
 package co.com.crediya.auth.model.user.vo;
 
+import co.com.crediya.auth.model.DomainConstants;
 import co.com.crediya.auth.model.user.exceptions.*;
 
 public record Address(String value) {
-  private static final int MIN_LENGTH = 5;
-  private static final int MAX_LENGTH = 80;
+  private static final int MIN_LENGTH = DomainConstants.USER_ADDRESS_MIN_LENGTH;
+  private static final int MAX_LENGTH = DomainConstants.USER_ADDRESS_MAX_LENGTH;
 
   public Address {
     if (value != null) {

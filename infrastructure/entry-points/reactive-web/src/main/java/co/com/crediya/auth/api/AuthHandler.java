@@ -25,7 +25,7 @@ public class AuthHandler {
   private final RequestValidator validator;
   private final JwtUtils jwtUtils;
 
-  public Mono<ServerResponse> listenLoging(ServerRequest request) {
+  public Mono<ServerResponse> listenLogingUseCase(ServerRequest request) {
     return validator
         .validate(request, LoginDTORequest.class, Authentication.class.getSimpleName())
         .flatMap(this::handleAuthenticate)
@@ -46,6 +46,13 @@ public class AuthHandler {
   private Mono<Authentication> handleAuthenticate(LoginDTORequest dto) {
     return this.authManager
         .authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()))
-        .doOnSubscribe(sub -> log.info("Requesting login with credentials: {}", dto));
+        .doOnSubscribe(sub -> log.info("Requesting login with credentials: {}", dto))
+        .doOnSuccess(res -> log.info("Success login for email: {}", dto.email()))
+        .doOnError(
+            err ->
+                log.error(
+                    "Error while trying to loging with email: {}. Error: {}",
+                    dto.email(),
+                    err.getMessage()));
   }
 }

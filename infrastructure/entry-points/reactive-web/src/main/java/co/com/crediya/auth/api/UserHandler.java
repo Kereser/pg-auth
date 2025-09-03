@@ -9,12 +9,15 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import co.com.crediya.auth.api.config.Routes;
 import co.com.crediya.auth.api.dto.CreateUserDTORequest;
+import co.com.crediya.auth.api.dto.FindAllUsersFiltersDTORequest;
 import co.com.crediya.auth.api.helper.UserRestMapper;
 import co.com.crediya.auth.model.user.User;
+import co.com.crediya.auth.model.user.dto.UserResponseDTO;
 import co.com.crediya.auth.model.user.exceptions.MissingRequiredParam;
 import co.com.crediya.auth.model.user.vo.IdNumber;
 import co.com.crediya.auth.requestvalidator.RequestValidator;
 import co.com.crediya.auth.usecase.createuser.CreateUserUseCase;
+import co.com.crediya.auth.usecase.findall.FindAllUsersUseCase;
 import co.com.crediya.auth.usecase.findbyidnumber.FindByIdNumberUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,7 @@ import reactor.core.publisher.Mono;
 public class UserHandler {
   private final CreateUserUseCase createUserUseCase;
   private final FindByIdNumberUseCase findByIdNumberUseCase;
+  private final FindAllUsersUseCase findAllUsersUseCase;
   private final RequestValidator reqValidator;
   private final UserRestMapper restMapper;
   private final Routes routes;
@@ -81,5 +85,13 @@ public class UserHandler {
                     "Cannot retrieve user for idNumber: {}. Reason: {}",
                     idNumberVariable,
                     err.getMessage()));
+  }
+
+  public Mono<ServerResponse> listFindAllUsersFiltered(ServerRequest req) {
+    return ServerResponse.status(HttpStatus.FOUND)
+        .body(
+            findAllUsersUseCase.execute(
+                restMapper.toCommand(FindAllUsersFiltersDTORequest.from(req))),
+            UserResponseDTO.class);
   }
 }

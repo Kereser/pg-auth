@@ -2,11 +2,12 @@ package co.com.crediya.auth.model.user.vo;
 
 import java.util.regex.Pattern;
 
+import co.com.crediya.auth.model.DomainConstants;
 import co.com.crediya.auth.model.user.exceptions.*;
 
 public record UserEmail(String value) {
-  private static final int MAX_LENGTH = 65;
-  private static final String regex = "^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
+  private static final int MAX_LENGTH = DomainConstants.USER_EMAIL_MAX_LENGTH;
+  private static final String regex = DomainConstants.USER_EMAIL_REGEX;
 
   public UserEmail {
     if (value == null || value.isEmpty()) {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.reactive.TransactionalOperator;
 
 import co.com.crediya.auth.model.user.User;
+import co.com.crediya.auth.model.user.dto.FindAllUsersFiltersCommand;
 import co.com.crediya.auth.model.user.gateways.UserRepository;
 import co.com.crediya.auth.model.user.vo.IdNumber;
 import co.com.crediya.auth.model.user.vo.UserEmail;
@@ -13,6 +14,7 @@ import co.com.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.crediya.auth.r2dbc.user.entity.UserEntity;
 import co.com.crediya.auth.r2dbc.user.mapper.UserMapperStandard;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -28,6 +30,21 @@ public class UserRepositoryAdapter
       TransactionalOperator txOperator) {
     super(repository, mapper::toEntity, mapper::toData);
     this.txOperator = txOperator;
+  }
+
+  @Override
+  public Flux<User> findAllFiltered(FindAllUsersFiltersCommand command) {
+    return repository
+        .findAllFiltered(command)
+        .map(super::toEntity)
+        .as(txOperator::transactional)
+        .doOnSubscribe(sub -> log.info("Getting all users for filters: {}", command))
+        .doOnError(
+            err ->
+                log.info(
+                    "Unable to fetch users using filters: {}. Error: {}",
+                    command,
+                    err.getMessage()));
   }
 
   @Override

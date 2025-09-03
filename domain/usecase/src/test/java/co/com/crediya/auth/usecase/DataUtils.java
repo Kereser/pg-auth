@@ -94,4 +94,14 @@ public class DataUtils {
     long value = RANDOM.nextLong(1_000_000L, 200_000_000L);
     return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
   }
+
+  public static BigDecimal randomBigDecimal(Long maxVal) {
+    long value = RANDOM.nextLong(1_000_000L, maxVal);
+    return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
+  }
+
+  public static BigDecimal randomBigDecimal(BigDecimal maxVal) {
+    long value = RANDOM.nextLong(1_000_000L, maxVal.longValue());
+    return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
+  }
 }

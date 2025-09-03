@@ -2,7 +2,6 @@ package co.com.crediya.auth.api.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
@@ -68,7 +67,7 @@ public class SecurityConfig {
         .permitAll()
         .pathMatchers(ACTUATOR_PATHS)
         .permitAll()
-        .pathMatchers(HttpMethod.POST, usersPath())
+        .pathMatchers(usersPath())
         .hasAnyAuthority(RoleConstants.MANAGER, RoleConstants.ADMIN)
         .anyExchange()
         .authenticated();

@@ -2,11 +2,12 @@ package co.com.crediya.auth.model.user.vo;
 
 import java.time.LocalDate;
 
+import co.com.crediya.auth.model.DomainConstants;
 import co.com.crediya.auth.model.user.exceptions.*;
 
 public record BirthDate(LocalDate value) {
-  private static final int MIN_AGE = 18;
-  private static final int MAX_AGE = 99;
+  private static final int MIN_AGE = DomainConstants.USER_BIRTH_DATE_MIN;
+  private static final int MAX_AGE = DomainConstants.USER_BIRTH_DATE_MAX;
 
   public BirthDate {
     if (value == null) {
