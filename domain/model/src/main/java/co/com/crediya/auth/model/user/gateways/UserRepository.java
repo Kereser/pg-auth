@@ -1,8 +1,10 @@
 package co.com.crediya.auth.model.user.gateways;
 
 import co.com.crediya.auth.model.user.User;
+import co.com.crediya.auth.model.user.dto.FindAllUsersFiltersCommand;
 import co.com.crediya.auth.model.user.vo.IdNumber;
 import co.com.crediya.auth.model.user.vo.UserEmail;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface UserRepository {
@@ -13,4 +15,6 @@ public interface UserRepository {
   Mono<User> findByIdNumber(IdNumber idNumber);
 
   Mono<User> findByEmail(UserEmail email);
+
+  Flux<User> findAllFiltered(FindAllUsersFiltersCommand command);
 }
