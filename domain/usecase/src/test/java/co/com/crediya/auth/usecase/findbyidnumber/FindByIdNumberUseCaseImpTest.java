@@ -1,5 +1,7 @@
 package co.com.crediya.auth.usecase.findbyidnumber;
 
+import static co.com.crediya.auth.usecase.DataUtils.*;
+
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,17 +43,24 @@ class FindByIdNumberUseCaseImpTest {
 
   @BeforeEach
   void setUp() {
-    idNumber = new IdNumber("12345");
+    idNumber = new IdNumber(randomIdNumber());
 
     userDomain =
         User.builder()
             .id(UUID.randomUUID())
             .idNumber(idNumber)
-            .email(new UserEmail("test@test.com"))
-            .firstName(new FirstName("Jane"))
+            .email(new UserEmail(randomEmail()))
+            .firstName(new FirstName(randomName()))
             .build();
 
-    responseDTO = new UserResponseDTO(userDomain.getId(), "test@test.com", "Jane", "CC", "12345");
+    responseDTO =
+        new UserResponseDTO(
+            userDomain.getId(),
+            randomEmail(),
+            randomBigDecimal(),
+            randomName(),
+            randomIdType(),
+            randomIdNumber());
   }
 
   @Test

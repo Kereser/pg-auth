@@ -1,5 +1,6 @@
 package co.com.crediya.auth.usecase.createuser;
 
+import static co.com.crediya.auth.model.DomainConstants.USER_MAX_SALARY;
 import static co.com.crediya.auth.usecase.DataUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,6 +30,7 @@ import co.com.crediya.auth.model.user.mapper.UserMapper;
 import co.com.crediya.auth.model.user.vo.FirstName;
 import co.com.crediya.auth.model.user.vo.IdNumber;
 import co.com.crediya.auth.model.user.vo.UserEmail;
+import co.com.crediya.auth.model.user.vo.UserSalary;
 import reactor.blockhound.BlockHound;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -71,6 +73,7 @@ class CreateUserUseCaseImpTest {
         User.builder()
             .id(UUID.randomUUID())
             .email(new UserEmail(randomEmail()))
+            .baseSalary(new UserSalary(randomBigDecimal(USER_MAX_SALARY)))
             .password(randomPassword(10))
             .firstName(new FirstName(randomName()))
             .idNumber(new IdNumber(randomIdNumber()))
@@ -81,6 +84,7 @@ class CreateUserUseCaseImpTest {
         new UserResponseDTO(
             userDomain.getId(),
             userDomain.getEmail().value(),
+            userDomain.getBaseSalary().value(),
             userDomain.getFirstName().value(),
             randomIdType(),
             randomIdNumber());
