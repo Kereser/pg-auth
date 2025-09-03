@@ -1,11 +1,11 @@
 package co.com.crediya.auth.model.user.vo;
 
+import co.com.crediya.auth.model.DomainConstants;
 import co.com.crediya.auth.model.user.exceptions.*;
 
 public record FirstName(String value) {
-  private static final String FIELD = "firstName";
-  private static final int MIN_LENGTH = 3;
-  private static final int MAX_LENGTH = 30;
+  private static final int MIN_LENGTH = DomainConstants.USER_MIN_FIRST_NAME_LENGTH;
+  private static final int MAX_LENGTH = DomainConstants.USER_MAX_FIRST_NAME_LENGTH;
 
   public FirstName {
     if (value == null || value.isBlank()) {

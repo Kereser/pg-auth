@@ -1,10 +1,11 @@
 package co.com.crediya.auth.model.user.vo;
 
+import co.com.crediya.auth.model.DomainConstants;
 import co.com.crediya.auth.model.user.exceptions.*;
 
 public record IdNumber(String value) {
-  private static final int MIN_VALUE = 5;
-  private static final int MAX_VALUE = 20;
+  private static final int MIN_VALUE = DomainConstants.USER_MIN_ID_NUMBER_LENGTH;
+  private static final int MAX_VALUE = DomainConstants.USER_MAX_ID_NUMBER_LENGTH;
 
   public IdNumber {
     if (value == null || value.isBlank()) {
