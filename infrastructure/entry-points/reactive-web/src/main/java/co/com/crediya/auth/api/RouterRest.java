@@ -141,7 +141,8 @@ public class RouterRest {
                     .GET(
                         routes.getPaths().getUserByIdNumber(),
                         userHandler::listenFindUserByIdNumberUseCase)
-                    .POST(routes.getPaths().getLogin(), authHandler::listenLoging))
+                    .GET(routes.getPaths().getUsers(), userHandler::listFindAllUsersFiltered)
+                    .POST(routes.getPaths().getLogin(), authHandler::listenLogingUseCase))
         .build();
   }
 }
