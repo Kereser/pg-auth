@@ -43,6 +43,7 @@ public interface UserMapperStandard extends UserMapper {
   @Mapping(target = "firstName", source = "firstName.value")
   @Mapping(target = "idNumber", source = "idNumber.value")
   @Mapping(target = "idType", source = "idType.code")
+  @Mapping(target = "baseSalary", source = "baseSalary.value")
   UserResponseDTO toDTOResponse(User user);
 
   default Role toUserRole(UUID id) {
